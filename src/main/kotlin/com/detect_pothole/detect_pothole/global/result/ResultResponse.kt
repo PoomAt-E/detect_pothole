@@ -4,6 +4,8 @@ class ResultResponse(
     resultCode: ResultCode,
     data: Any
 ) {
+    constructor(resultCode: ResultCode): this(resultCode, "")
+
     val code: String
     val message: String
 
