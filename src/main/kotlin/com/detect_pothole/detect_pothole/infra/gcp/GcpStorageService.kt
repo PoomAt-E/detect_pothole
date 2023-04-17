@@ -17,13 +17,16 @@ class GcpStorageService(
         val randUUID = UUID.randomUUID().toString()
         val fileEx = getFileEx(imageFile.originalFilename!!)
         val blobInfo = storage.create(
+
                 BlobInfo.newBuilder(bucketName, "user-profile/$randUUID")
                         .setContentDisposition("/user-profile")
                         .setContentType("image/$fileEx")
                         .build(),
                 imageFile.inputStream
         )
-        return randUUID
+
+        // TODO : Multipart file의 타입이 이미지인지 비디오인지에 따라 유동적으로 대응 가능하도록 수정해야 함.
+        return Codes.VIDEO_PATH + randUUID + "." + fileEx
     }
 
     fun getFileEx(fileName: String): String {
