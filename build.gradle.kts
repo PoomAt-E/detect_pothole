@@ -26,10 +26,17 @@ extra["springCloudGcpVersion"] = "4.1.4"
 extra["springCloudVersion"] = "2022.0.2"
 
 dependencies {
+    //swagger
+    implementation("org.springdoc", "springdoc-openapi-kotlin", "1.6.6")
+    implementation("org.springdoc", "springdoc-openapi-ui", "1.6.6")
+
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    //gcp
     implementation("com.google.cloud:spring-cloud-gcp-starter-storage")
+
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
