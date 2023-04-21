@@ -13,11 +13,10 @@ class GcpStorageService(
         @Value("\${spring.cloud.gcp.storage.bucket}")
         private val bucketName: String
 ) {
-    fun uploadFileToGCS(imageFile: MultipartFile): String {
+    fun uploadImageToGCS(imageFile: MultipartFile): String {
         val randUUID = UUID.randomUUID().toString()
         val fileEx = getFileEx(imageFile.originalFilename!!)
         val blobInfo = storage.create(
-
                 BlobInfo.newBuilder(bucketName, "user-profile/$randUUID")
                         .setContentDisposition("/user-profile")
                         .setContentType("image/$fileEx")
@@ -25,7 +24,22 @@ class GcpStorageService(
                 imageFile.inputStream
         )
 
-        // TODO : Multipart file의 타입이 이미지인지 비디오인지에 따라 유동적으로 대응 가능하도록 수정해야 함.
+
+        return Codes.IMAGE_PATH + randUUID + "." + fileEx
+    }
+
+    fun uploadVideoToGCS(videoFile: MultipartFile): String {
+        val randUUID = UUID.randomUUID().toString()
+        val fileEx = getFileEx(videoFile.originalFilename!!)
+        val blobInfo = storage.create(
+                BlobInfo.newBuilder(bucketName, "user-profile/$randUUID")
+                        .setContentDisposition("/user-profile")
+                        .setContentType("video/$fileEx")
+                        .build(),
+                videoFile.inputStream
+        )
+
+
         return Codes.VIDEO_PATH + randUUID + "." + fileEx
     }
 
