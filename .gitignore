@@ -39,4 +39,5 @@ out/
 /src/main/resources/application.yml
 /src/main/resources/application-dev.yml
 /src/main/resources/detect-pothole-383906-b2ce4ba60c0f.json
+/db/**
 docker-compose.yml
