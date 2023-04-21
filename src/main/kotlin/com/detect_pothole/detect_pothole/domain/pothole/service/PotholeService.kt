@@ -31,11 +31,11 @@ class PotholeService(
             point: Point,
             video: MultipartFile
     ): ResultResponse {
-        val videoUrl = gcpStorageService.uploadFileToGCS(video)
+        val videoUrl = gcpStorageService.uploadVideoToGCS(video)
 
         //TODO: ML 서버 api 호출
         val img: MultipartFile? = null
-        val imageUrl = gcpStorageService.uploadFileToGCS(img!!)
+        val imageUrl = gcpStorageService.uploadImageToGCS(img!!)
 
         val pothole = Pothole().apply {
             this.geotabId = geotabRepository.findById(geotabId).orElseThrow{ GeotabNotFoundException() }
