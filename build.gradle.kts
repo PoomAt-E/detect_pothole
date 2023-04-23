@@ -18,8 +18,16 @@ configurations {
     }
 }
 
+allOpen{
+    annotation("javax.persistence.Entity")
+    annotation("javax.persistence.MappedSuperclass")
+    annotation("javax.persistence.Embeddable")
+}
+
 repositories {
     mavenCentral()
+    maven { url = uri("https://repo.spring.io/milestone") }
+    maven { url = uri("https://repo.spring.io/snapshot") }
 }
 
 extra["springCloudGcpVersion"] = "4.1.4"
@@ -27,8 +35,12 @@ extra["springCloudVersion"] = "2022.0.2"
 
 dependencies {
     //swagger
-    implementation("org.springdoc", "springdoc-openapi-kotlin", "1.6.6")
-    implementation("org.springdoc", "springdoc-openapi-ui", "1.6.6")
+//    implementation ("io.springfox:springdoc-boot-starter:3.0.0")
+//    implementation("io.springfox:springdoc-swagger-ui:3.0.0")
+    implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
+    implementation("org.springdoc:springdoc-openapi-kotlin:1.7.0")
+
+
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
