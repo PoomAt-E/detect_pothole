@@ -5,8 +5,8 @@ import java.math.BigDecimal
 
 data class PotholeRegistrationRequest(
         val geotabId: Long,
-        val xacc: BigDecimal,
-        val yacc: BigDecimal,
-        val zacc: BigDecimal,
+        val xacc: Double,
+        val yacc: Double,
+        val zacc: Double,
         val point: Point
 )
