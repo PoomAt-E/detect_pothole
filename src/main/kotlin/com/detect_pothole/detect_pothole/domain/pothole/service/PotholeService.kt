@@ -25,9 +25,9 @@ class PotholeService(
     @Transactional
     fun register(
             geotabId: Long,
-            xacc: BigDecimal,
-            yacc: BigDecimal,
-            zacc: BigDecimal,
+            xacc: Double,
+            yacc: Double,
+            zacc: Double,
             point: Point,
             video: MultipartFile
     ): ResultResponse {
@@ -39,9 +39,9 @@ class PotholeService(
 
         val pothole = Pothole().apply {
             this.geotabId = geotabRepository.findById(geotabId).orElseThrow{ GeotabNotFoundException() }
-            this.xacc = xacc
-            this.yacc = yacc
-            this.zacc = zacc
+            this.xacc = BigDecimal.valueOf(xacc)
+            this.yacc = BigDecimal.valueOf(yacc)
+            this.zacc = BigDecimal.valueOf(zacc)
             this.point = point
             this.videoURL = videoUrl
             this.imageURL = imageUrl
@@ -84,4 +84,31 @@ class PotholeService(
         )
     }
 
+    fun update(
+        potholeId: Long,
+        xacc: Double,
+        yacc: Double,
+        zacc: Double,
+        point: Point,
+        video: MultipartFile?
+    ): ResultResponse {
+        val pothole = potholeRepository.findById(potholeId).orElseThrow { PotholeNotFoundException() }
+        if(video != null) {
+            val videoUrl = gcpStorageService.uploadVideoToGCS(video)
+            pothole.videoURL = videoUrl
+            //TODO : ML 서버 api 호출, 반환 받은 정보 바인딩
+        }
+        pothole.apply {
+            this.xacc = BigDecimal.valueOf(xacc)
+            this.yacc = BigDecimal.valueOf(yacc)
+            this.zacc = BigDecimal.valueOf(zacc)
+            this.point = point
+            this.modDt = Timestamp(System.currentTimeMillis())
+        }
+        potholeRepository.save(pothole)
+
+        return ResultResponse(
+                ResultCode.POTHOLE_UPDATE_SUCCESS
+        )
+    }
 }
