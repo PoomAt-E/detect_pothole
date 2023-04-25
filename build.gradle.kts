@@ -41,6 +41,13 @@ dependencies {
 // https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator
     implementation("org.hibernate.validator:hibernate-validator:8.0.0.Final")
 
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-spatial
+    implementation("org.hibernate:hibernate-spatial:6.1.6.Final")
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
+    implementation("org.hibernate:hibernate-core:6.1.6.Final")
+
+
+
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")
