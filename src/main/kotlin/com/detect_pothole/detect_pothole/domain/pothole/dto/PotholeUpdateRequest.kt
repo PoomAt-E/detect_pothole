@@ -1,6 +1,6 @@
 package com.detect_pothole.detect_pothole.domain.pothole.dto
 
-import org.springframework.data.geo.Point
+import org.locationtech.jts.geom.Point
 
 data class PotholeUpdateRequest (
         val potholeId: Long,

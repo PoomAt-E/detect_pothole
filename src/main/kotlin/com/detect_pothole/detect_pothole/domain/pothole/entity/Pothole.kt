@@ -2,44 +2,45 @@ package com.detect_pothole.detect_pothole.domain.pothole.entity
 
 import com.detect_pothole.detect_pothole.domain.geotab.entity.Geotab
 import jakarta.persistence.*
-import org.springframework.data.geo.Point
+import org.locationtech.jts.geom.Point
 import java.math.BigDecimal
 import java.sql.Timestamp
 
 @Entity
+@Table(name = "pothole")
 class Pothole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "geotabId")
+    @JoinColumn(name = "gid")
     var geotabId: Geotab? = null
 
-    @Column(name = "X_acc", nullable = false)
+    @Column(name = "x_acc")
     var xacc: BigDecimal? = null
 
-    @Column(name = "Y_acc", nullable = false)
+    @Column(name = "y_acc")
     var yacc: BigDecimal? = null
 
-    @Column(name = "Z_acc", nullable = false)
+    @Column(name = "z_acc")
     var zacc: BigDecimal? = null
 
-    @Column(name = "videoUrl", nullable = false)
+    @Column(name = "video_url")
     var videoURL: String? = null
 
-    @Column(name = "imageURL", nullable = false)
+    @Column(name = "image_url")
     var imageURL: String? = null
 
-    @Column(name = "point", nullable = false)
+    @Column(name = "point", columnDefinition = "GEOMETRY")
     var point: Point? = null
 
-    @Column(name = "state", nullable = false)
-    var state: Int = 0
+    @Column(name = "state")
+    var state: String? = null
 
-    @Column(name = "regDt", nullable = false)
+    @Column(name = "reg_dt")
     var regDt: Timestamp? = null
 
-    @Column(name = "modDt", nullable = false)
+    @Column(name = "mod_dt")
     var modDt: Timestamp? = null
 }

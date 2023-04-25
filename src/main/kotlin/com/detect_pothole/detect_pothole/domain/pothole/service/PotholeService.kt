@@ -10,7 +10,7 @@ import com.detect_pothole.detect_pothole.global.result.ResultCode
 import com.detect_pothole.detect_pothole.global.result.ResultResponse
 import com.detect_pothole.detect_pothole.infra.gcp.GcpStorageService
 import jakarta.transaction.Transactional
-import org.springframework.data.geo.Point
+import org.locationtech.jts.geom.Point
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.math.BigDecimal
@@ -45,7 +45,7 @@ class PotholeService(
             this.point = point
             this.videoURL = videoUrl
             this.imageURL = imageUrl
-            this.state = 0  // TODO: 추후 ML 서버에서 받아온 값으로 변경
+            this.state = "A"  // TODO: 추후 ML 서버에서 받아온 값으로 변경
             this.regDt = Timestamp(System.currentTimeMillis())
             this.modDt = Timestamp(System.currentTimeMillis())
         }

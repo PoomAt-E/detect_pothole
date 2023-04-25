@@ -5,7 +5,7 @@ import com.detect_pothole.detect_pothole.domain.geotab.dto.GeotabNameUpdateReque
 import com.detect_pothole.detect_pothole.domain.geotab.dto.GeotabRegistrationRequest
 import com.detect_pothole.detect_pothole.domain.geotab.service.GeotabService
 import com.detect_pothole.detect_pothole.global.result.ResultResponse
-import org.springframework.data.geo.Point
+import org.locationtech.jts.geom.Point
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping

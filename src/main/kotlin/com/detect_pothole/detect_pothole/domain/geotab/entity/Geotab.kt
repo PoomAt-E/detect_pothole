@@ -2,7 +2,7 @@ package com.detect_pothole.detect_pothole.domain.geotab.entity
 
 import com.detect_pothole.detect_pothole.domain.pothole.entity.Pothole
 import jakarta.persistence.*
-import org.springframework.data.geo.Polygon
+import org.locationtech.jts.geom.Polygon
 import java.sql.Timestamp
 
 @Entity
@@ -12,16 +12,16 @@ class Geotab {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
 
-    @Column(name = "placename", nullable = false)
+    @Column(name = "place_name")
     var placename: String? = null
 
-    @Column(name = "area", nullable = false)
+    @Column(name = "area", columnDefinition = "GEOMETRY")
     var area: Polygon? = null
 
-    @Column(name = "regDt", nullable = false)
+    @Column(name = "reg_dt")
     var regDt: Timestamp? = null
 
-    @Column(name = "modDt", nullable = false)
+    @Column(name = "mod_dt")
     var modDt: Timestamp? = null
 
     @OneToMany(mappedBy = "geotabId", cascade = [CascadeType.REMOVE], orphanRemoval = true)
