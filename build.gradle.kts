@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.0.5"
+    id("org.springframework.boot") version "3.0.2"
     id("io.spring.dependency-management") version "1.1.0"
     kotlin("jvm") version "1.7.22"
     kotlin("plugin.spring") version "1.7.22"
@@ -35,11 +35,11 @@ extra["springCloudVersion"] = "2022.0.2"
 
 dependencies {
     //swagger
-//    implementation ("io.springfox:springdoc-boot-starter:3.0.0")
-//    implementation("io.springfox:springdoc-swagger-ui:3.0.0")
-    implementation("org.springdoc:springdoc-openapi-ui:1.7.0")
-    implementation("org.springdoc:springdoc-openapi-kotlin:1.7.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 
+
+// https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator
+    implementation("org.hibernate.validator:hibernate-validator:8.0.0.Final")
 
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
