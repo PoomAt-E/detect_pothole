@@ -5,11 +5,14 @@ import com.detect_pothole.detect_pothole.domain.geotab.exception.GeotabNotFoundE
 import com.detect_pothole.detect_pothole.domain.geotab.dto.GeotabResponse
 import com.detect_pothole.detect_pothole.domain.geotab.exception.GeotabNameDuplicatedException
 import com.detect_pothole.detect_pothole.domain.geotab.repository.GeotabRepository
+import com.detect_pothole.detect_pothole.domain.pothole.dto.PointDTO
 import com.detect_pothole.detect_pothole.global.result.ResultCode
 import com.detect_pothole.detect_pothole.global.result.ResultResponse
 import jakarta.transaction.Transactional
-import org.springframework.data.geo.Point
-import org.springframework.data.geo.Polygon
+import org.locationtech.jts.geom.Coordinate
+import org.locationtech.jts.geom.GeometryFactory
+import org.locationtech.jts.geom.Point
+import org.locationtech.jts.geom.Polygon
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
 
@@ -20,13 +23,19 @@ class GeotabService(
     @Transactional
     fun register(
             areaName: String,
-            area: List<Point>
+            area: List<PointDTO>
     ): ResultResponse {
         if(geotabRepository.existsByPlacename(areaName)) throw GeotabNameDuplicatedException()
 
+//        val pointList = area.map {
+//            val pointWKT = String.format("POINT(%f %f)", it.x, it.y)
+//            val point = WKTReader().read(pointWKT) as Point
+//            point
+//        }
+
         val geotab = Geotab().apply {
             this.placename = areaName
-            this.area = Polygon(area)
+            this.area = getPolygon(area)
             this.regDt = Timestamp(System.currentTimeMillis())
             this.modDt = Timestamp(System.currentTimeMillis())
         }
@@ -93,15 +102,29 @@ class GeotabService(
     }
     fun updateGeotabArea(
             id: Long,
-            area: List<Point>
+            area: List<PointDTO>
     ): ResultResponse {
         val geotab = geotabRepository.findById(id).orElseThrow { GeotabNotFoundException() }
 
-        geotab.area = Polygon(area)
+        geotab.area = getPolygon(area)
         geotab.modDt = Timestamp(System.currentTimeMillis())
         geotabRepository.save(geotab)
         return ResultResponse(
                 ResultCode.GEOTAB_UPDATE_SUCCESS
         )
     }
+
+    fun getPolygon(
+            area: List<PointDTO>
+    ): Polygon {
+        val coordinateList = area.map {
+            Coordinate(it.x, it.y)
+        }
+        val factory = GeometryFactory()
+
+        val linear = factory.createLinearRing(coordinateList.toTypedArray())
+        val polygon = factory.createPolygon(linear)
+        return polygon
+    }
+
 }
