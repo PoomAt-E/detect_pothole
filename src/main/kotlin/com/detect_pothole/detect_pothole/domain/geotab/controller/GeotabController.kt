@@ -4,8 +4,8 @@ import com.detect_pothole.detect_pothole.domain.geotab.dto.GeotabAreaUpdateReque
 import com.detect_pothole.detect_pothole.domain.geotab.dto.GeotabNameUpdateRequest
 import com.detect_pothole.detect_pothole.domain.geotab.dto.GeotabRegistrationRequest
 import com.detect_pothole.detect_pothole.domain.geotab.service.GeotabService
+import com.detect_pothole.detect_pothole.domain.pothole.dto.PointDTO
 import com.detect_pothole.detect_pothole.global.result.ResultResponse
-import org.locationtech.jts.geom.Point
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -44,7 +44,7 @@ class GeotabController(
 
     @PostMapping("/search/point")
     fun findGeotabByPoint(
-            @RequestBody point: Point
+            @RequestBody point: PointDTO
     ): ResultResponse {
         return geotabService.findGeotabByPoint(point)
     }
