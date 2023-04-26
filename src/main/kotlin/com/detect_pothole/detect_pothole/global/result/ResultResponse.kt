@@ -2,7 +2,7 @@ package com.detect_pothole.detect_pothole.global.result
 
 class ResultResponse(
     resultCode: ResultCode,
-    data: Any
+    val data: Any
 ) {
     constructor(resultCode: ResultCode): this(resultCode, "")
 
