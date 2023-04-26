@@ -22,7 +22,8 @@ class PotholeController(
                 potholeRegistrationRequest.xacc,
                 potholeRegistrationRequest.yacc,
                 potholeRegistrationRequest.zacc,
-                potholeRegistrationRequest.point,
+                potholeRegistrationRequest.x,
+                potholeRegistrationRequest.y,
                 video
         )
     }
@@ -56,7 +57,8 @@ class PotholeController(
                 potholeUpdateRequest.xacc,
                 potholeUpdateRequest.yacc,
                 potholeUpdateRequest.zacc,
-                potholeUpdateRequest.point,
+                potholeUpdateRequest.x,
+                potholeUpdateRequest.y,
                 video
         )
     }
