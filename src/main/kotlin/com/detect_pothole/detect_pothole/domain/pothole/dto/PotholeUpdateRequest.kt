@@ -7,5 +7,6 @@ data class PotholeUpdateRequest (
         val xacc: Double,
         val yacc: Double,
         val zacc: Double,
-        val point: Point
+        val x: Double,
+        val y: Double
 )
