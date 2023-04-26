@@ -6,13 +6,11 @@ import com.detect_pothole.detect_pothole.domain.geotab.dto.GeotabResponse
 import com.detect_pothole.detect_pothole.domain.geotab.exception.GeotabNameDuplicatedException
 import com.detect_pothole.detect_pothole.domain.geotab.repository.GeotabRepository
 import com.detect_pothole.detect_pothole.domain.pothole.dto.PointDTO
+import com.detect_pothole.detect_pothole.global.ConvertUtill
 import com.detect_pothole.detect_pothole.global.result.ResultCode
 import com.detect_pothole.detect_pothole.global.result.ResultResponse
 import jakarta.transaction.Transactional
-import org.locationtech.jts.geom.Coordinate
-import org.locationtech.jts.geom.GeometryFactory
-import org.locationtech.jts.geom.Point
-import org.locationtech.jts.geom.Polygon
+import org.locationtech.jts.geom.*
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
 
@@ -27,15 +25,9 @@ class GeotabService(
     ): ResultResponse {
         if(geotabRepository.existsByPlacename(areaName)) throw GeotabNameDuplicatedException()
 
-//        val pointList = area.map {
-//            val pointWKT = String.format("POINT(%f %f)", it.x, it.y)
-//            val point = WKTReader().read(pointWKT) as Point
-//            point
-//        }
-
         val geotab = Geotab().apply {
             this.placename = areaName
-            this.area = getPolygon(area)
+            this.area = ConvertUtill.getPolygon(area)
             this.regDt = Timestamp(System.currentTimeMillis())
             this.modDt = Timestamp(System.currentTimeMillis())
         }
@@ -47,10 +39,10 @@ class GeotabService(
     fun findGeotabById(
             id: Long
     ): ResultResponse {
-        val geotab = geotabRepository.findById(id)
+        val geotab = geotabRepository.findById(id).orElseThrow { GeotabNotFoundException() }
         return ResultResponse(
                 ResultCode.GEOTAB_SEARCH_SUCCESS,
-                geotab
+                GeotabResponse.of(geotab)
         )
     }
     fun findGeotabByAreaName(
@@ -63,18 +55,22 @@ class GeotabService(
         )
     }
     fun findGeotabByPoint(
-            point: Point
+            pointDTO: PointDTO
     ): ResultResponse {
+        val point = ConvertUtill.getPoint(pointDTO.x, pointDTO.y)
         val geotabList = geotabRepository.findAll()
-        val geotab = geotabList.filter { it.area!!.contains(point) }.map {
-            GeotabResponse.of(it)
+        val containedGeotabList = ArrayList<Geotab>()
+        for (geotab in geotabList) {
+            if(findContainingPolygon(point, geotab.area!!)) {
+                containedGeotabList.add(geotab)
+            }
         }
 
-        if (geotab.isEmpty()) throw GeotabNotFoundException()
+        if (containedGeotabList.isEmpty()) throw GeotabNotFoundException()
 
         return ResultResponse(
                 ResultCode.GEOTAB_SEARCH_SUCCESS,
-                geotab[0]   // 여러개가 있지는 않을 것으로 예상
+                containedGeotabList.map { GeotabResponse.of(it) }  // 여러개가 있지는 않을 것으로 예상
         )
     }
     fun findAllGeotab(): ResultResponse {
@@ -106,25 +102,17 @@ class GeotabService(
     ): ResultResponse {
         val geotab = geotabRepository.findById(id).orElseThrow { GeotabNotFoundException() }
 
-        geotab.area = getPolygon(area)
+        geotab.area =  ConvertUtill.getPolygon(area)
         geotab.modDt = Timestamp(System.currentTimeMillis())
         geotabRepository.save(geotab)
         return ResultResponse(
                 ResultCode.GEOTAB_UPDATE_SUCCESS
         )
     }
-
-    fun getPolygon(
-            area: List<PointDTO>
-    ): Polygon {
-        val coordinateList = area.map {
-            Coordinate(it.x, it.y)
+    private fun findContainingPolygon(point: Point, polygon: Geometry): Boolean {
+        if (polygon.contains(point)) {
+            return true
         }
-        val factory = GeometryFactory()
-
-        val linear = factory.createLinearRing(coordinateList.toTypedArray())
-        val polygon = factory.createPolygon(linear)
-        return polygon
+        return false
     }
-
 }
