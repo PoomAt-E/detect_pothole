@@ -6,11 +6,13 @@ import com.detect_pothole.detect_pothole.domain.pothole.dto.PotholeResponse
 import com.detect_pothole.detect_pothole.domain.pothole.entity.Pothole
 import com.detect_pothole.detect_pothole.domain.pothole.exception.PotholeNotFoundException
 import com.detect_pothole.detect_pothole.domain.pothole.repository.PotholeRepository
+import com.detect_pothole.detect_pothole.global.ConvertUtill
 import com.detect_pothole.detect_pothole.global.result.ResultCode
 import com.detect_pothole.detect_pothole.global.result.ResultResponse
 import com.detect_pothole.detect_pothole.infra.gcp.GcpStorageService
 import jakarta.transaction.Transactional
 import org.locationtech.jts.geom.Point
+import org.locationtech.jts.io.WKTReader
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.math.BigDecimal
@@ -28,7 +30,8 @@ class PotholeService(
             xacc: Double,
             yacc: Double,
             zacc: Double,
-            point: Point,
+            x: Double,
+            y: Double,
             video: MultipartFile
     ): ResultResponse {
         val videoUrl = gcpStorageService.uploadVideoToGCS(video)
@@ -42,7 +45,7 @@ class PotholeService(
             this.xacc = BigDecimal.valueOf(xacc)
             this.yacc = BigDecimal.valueOf(yacc)
             this.zacc = BigDecimal.valueOf(zacc)
-            this.point = point
+            this.point = ConvertUtill.getPoint(x, y)
             this.videoURL = videoUrl
             this.imageURL = imageUrl
             this.state = "A"  // TODO: 추후 ML 서버에서 받아온 값으로 변경
@@ -89,7 +92,8 @@ class PotholeService(
         xacc: Double,
         yacc: Double,
         zacc: Double,
-        point: Point,
+        x: Double,
+        y: Double,
         video: MultipartFile?
     ): ResultResponse {
         val pothole = potholeRepository.findById(potholeId).orElseThrow { PotholeNotFoundException() }
@@ -102,7 +106,7 @@ class PotholeService(
             this.xacc = BigDecimal.valueOf(xacc)
             this.yacc = BigDecimal.valueOf(yacc)
             this.zacc = BigDecimal.valueOf(zacc)
-            this.point = point
+            this.point = ConvertUtill.getPoint(x, y)
             this.modDt = Timestamp(System.currentTimeMillis())
         }
         potholeRepository.save(pothole)
