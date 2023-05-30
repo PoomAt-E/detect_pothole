@@ -26,8 +26,8 @@ class Pothole {
     @Column(name = "z_acc")
     var zacc: BigDecimal? = null
 
-    @Column(name = "video_url")
-    var videoURL: String? = null
+//    @Column(name = "video_url")
+//    var videoURL: String? = null
 
     @Column(name = "image_url")
     var imageURL: String? = null
