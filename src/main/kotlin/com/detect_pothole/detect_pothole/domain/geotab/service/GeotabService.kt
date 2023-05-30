@@ -2,11 +2,14 @@ package com.detect_pothole.detect_pothole.domain.geotab.service
 
 import com.detect_pothole.detect_pothole.domain.geotab.entity.Geotab
 import com.detect_pothole.detect_pothole.domain.geotab.exception.GeotabNotFoundException
-import com.detect_pothole.detect_pothole.domain.geotab.dto.GeotabResponse
 import com.detect_pothole.detect_pothole.domain.geotab.exception.GeotabNameDuplicatedException
 import com.detect_pothole.detect_pothole.domain.geotab.repository.GeotabRepository
 import com.detect_pothole.detect_pothole.domain.pothole.dto.PointDTO
 import com.detect_pothole.detect_pothole.global.ConvertUtill
+import com.detect_pothole.detect_pothole.global.geojson.GeoJsonDTO
+import com.detect_pothole.detect_pothole.global.geojson.GeoJsonElementDTO
+import com.detect_pothole.detect_pothole.global.geojson.GeometryDTO
+import com.detect_pothole.detect_pothole.global.geojson.Properties
 import com.detect_pothole.detect_pothole.global.result.ResultCode
 import com.detect_pothole.detect_pothole.global.result.ResultResponse
 import jakarta.transaction.Transactional
@@ -42,7 +45,7 @@ class GeotabService(
         val geotab = geotabRepository.findById(id).orElseThrow { GeotabNotFoundException() }
         return ResultResponse(
                 ResultCode.GEOTAB_SEARCH_SUCCESS,
-                GeotabResponse.of(geotab)
+                getGeoJson(listOf(geotab))
         )
     }
     fun findGeotabByAreaName(
@@ -51,7 +54,7 @@ class GeotabService(
         val geotab = geotabRepository.findByPlacename(areaName).orElseThrow { GeotabNotFoundException() }
         return ResultResponse(
                 ResultCode.GEOTAB_SEARCH_SUCCESS,
-                GeotabResponse.of(geotab)
+                getGeoJson(listOf(geotab))
         )
     }
     fun findGeotabByPoint(
@@ -70,16 +73,17 @@ class GeotabService(
 
         return ResultResponse(
                 ResultCode.GEOTAB_SEARCH_SUCCESS,
-                containedGeotabList.map { GeotabResponse.of(it) }  // 여러개가 있지는 않을 것으로 예상
+                getGeoJson(containedGeotabList)
         )
     }
     fun findAllGeotab(): ResultResponse {
-        val geotabList = geotabRepository.findAll().map {
-            GeotabResponse.of(it)
-        }
+//        val geotabList = geotabRepository.findAll().map {
+//            GeotabResponse.of(it)
+//        }
+        val geotabList = geotabRepository.findAll()
         return ResultResponse(
                 ResultCode.GEOTAB_SEARCH_SUCCESS,
-                geotabList
+                getGeoJson(geotabList)
         )
     }
     fun updateGeotabName(
@@ -109,6 +113,19 @@ class GeotabService(
                 ResultCode.GEOTAB_UPDATE_SUCCESS
         )
     }
+
+    private fun getGeoJson(
+            geotabs: List<Geotab>
+    ): GeoJsonDTO {
+        var geojsonElementList = geotabs.map{geotab ->
+            GeoJsonElementDTO(
+                geometry = GeometryDTO("Polygon", geotab.area!!.coordinates.toList().map { listOf(it.x, it.y) }),
+                properties = Properties(code = geotab.id.toString(), name = geotab.placename!!)
+            )
+        }
+        return GeoJsonDTO(geojsonElementList)
+    }
+
     private fun findContainingPolygon(point: Point, polygon: Geometry): Boolean {
         if (polygon.contains(point)) {
             return true
