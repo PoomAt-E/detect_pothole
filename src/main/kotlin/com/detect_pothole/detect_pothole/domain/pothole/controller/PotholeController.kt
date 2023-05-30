@@ -15,7 +15,7 @@ class PotholeController(
     @PostMapping("/register")
     fun register(
             @RequestPart potholeRegistrationRequest: PotholeRegistrationRequest,
-            @RequestPart video: MultipartFile
+            @RequestPart image: MultipartFile
     ): ResultResponse {
         return potholeService.register(
                 potholeRegistrationRequest.geotabId,
@@ -24,7 +24,7 @@ class PotholeController(
                 potholeRegistrationRequest.zacc,
                 potholeRegistrationRequest.x,
                 potholeRegistrationRequest.y,
-                video
+                image
         )
     }
 
@@ -49,8 +49,7 @@ class PotholeController(
 
     @PostMapping("/update")
     fun update(
-            @RequestPart potholeUpdateRequest: PotholeUpdateRequest,
-            @RequestPart video: MultipartFile? = null
+            @RequestBody potholeUpdateRequest: PotholeUpdateRequest,
     ): ResultResponse {
         return potholeService.update(
                 potholeUpdateRequest.potholeId,
@@ -59,7 +58,6 @@ class PotholeController(
                 potholeUpdateRequest.zacc,
                 potholeUpdateRequest.x,
                 potholeUpdateRequest.y,
-                video
         )
     }
 }
