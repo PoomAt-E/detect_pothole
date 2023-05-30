@@ -10,7 +10,7 @@ class PotholeResponse(
         val xacc: Double,
         val yacc: Double,
         val zacc: Double,
-        val videoURL: String,
+//        val videoURL: String,
         val imageURL: String,
         val point: Point,
         val state: String,
@@ -23,7 +23,7 @@ class PotholeResponse(
                     pothole.xacc!!.toDouble(),
                     pothole.yacc!!.toDouble(),
                     pothole.zacc!!.toDouble(),
-                    pothole.videoURL!!,
+//                    pothole.videoURL!!,
                     pothole.imageURL!!,
                     pothole.point!!,
                     pothole.state!!
