@@ -14,8 +14,8 @@ class PotholeController(
 ) {
     @PostMapping("/register")
     fun register(
-            @RequestPart potholeRegistrationRequest: PotholeRegistrationRequest,
-            @RequestPart image: MultipartFile
+            @RequestPart("data") potholeRegistrationRequest: PotholeRegistrationRequest,
+            @RequestPart("image") image: MultipartFile
     ): ResultResponse {
         return potholeService.register(
                 potholeRegistrationRequest.geotabId,
