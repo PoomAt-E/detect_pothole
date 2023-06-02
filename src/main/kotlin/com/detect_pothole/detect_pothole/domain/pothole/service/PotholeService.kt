@@ -35,7 +35,7 @@ class PotholeService(
             y: Double,
             image: MultipartFile
     ): ResultResponse {
-        val imageUrl = gcpStorageService.uploadVideoToGCS(image)
+        val imageUrl = gcpStorageService.uploadImageToGCS(image)
 
         val pothole = Pothole().apply {
             this.geotabId = geotabRepository.findById(geotabId).orElseThrow{ GeotabNotFoundException() }
