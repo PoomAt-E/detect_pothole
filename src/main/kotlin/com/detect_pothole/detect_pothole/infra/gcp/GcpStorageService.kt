@@ -17,23 +17,23 @@ class GcpStorageService(
         val randUUID = UUID.randomUUID().toString()
         val fileEx = getFileEx(imageFile.originalFilename!!)
         val blobInfo = storage.create(
-                BlobInfo.newBuilder(bucketName, "user-profile/$randUUID")
-                        .setContentDisposition("/user-profile")
+                BlobInfo.newBuilder(bucketName, "image/$randUUID")
+                        .setContentDisposition("/image")
                         .setContentType("image/$fileEx")
                         .build(),
                 imageFile.inputStream
         )
 
 
-        return Codes.IMAGE_PATH + randUUID + "." + fileEx
+        return Codes.IMAGE_PATH + randUUID
     }
 
     fun uploadVideoToGCS(videoFile: MultipartFile): String {
         val randUUID = UUID.randomUUID().toString()
         val fileEx = getFileEx(videoFile.originalFilename!!)
         val blobInfo = storage.create(
-                BlobInfo.newBuilder(bucketName, "user-profile/$randUUID")
-                        .setContentDisposition("/user-profile")
+                BlobInfo.newBuilder(bucketName, "video/$randUUID")
+                        .setContentDisposition("/video")
                         .setContentType("video/$fileEx")
                         .build(),
                 videoFile.inputStream
