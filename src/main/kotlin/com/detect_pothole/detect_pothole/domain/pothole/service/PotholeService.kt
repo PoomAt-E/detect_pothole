@@ -2,6 +2,7 @@ package com.detect_pothole.detect_pothole.domain.pothole.service
 
 import com.detect_pothole.detect_pothole.domain.geotab.exception.GeotabNotFoundException
 import com.detect_pothole.detect_pothole.domain.geotab.repository.GeotabRepository
+import com.detect_pothole.detect_pothole.domain.pothole.dto.PotholeResponse
 import com.detect_pothole.detect_pothole.domain.pothole.entity.Pothole
 import com.detect_pothole.detect_pothole.domain.pothole.exception.PotholeNotFoundException
 import com.detect_pothole.detect_pothole.domain.pothole.repository.PotholeRepository
@@ -61,7 +62,7 @@ class PotholeService(
         val pothole = potholeRepository.findById(id).orElseThrow { PotholeNotFoundException() }
         return ResultResponse(
                 ResultCode.POTHOLE_SEARCH_SUCCESS,
-                getGeoJson(listOf(pothole))
+                PotholeResponse.of(pothole)
         )
     }
 
@@ -69,18 +70,18 @@ class PotholeService(
             geotabId: Long
     ): ResultResponse {
         val geotab = geotabRepository.findById(geotabId).orElseThrow { GeotabNotFoundException() }
-        val potholeList = geotab.potholeList
+        val potholeList = geotab.potholeList.map { PotholeResponse.of(it) }
         return ResultResponse(
                 ResultCode.POTHOLE_SEARCH_SUCCESS,
-                getGeoJson(potholeList)
+                potholeList
         )
     }
 
     fun findAllPothole(): ResultResponse {
-        val potholeList = potholeRepository.findAll()
+        val potholeList = potholeRepository.findAll().map { PotholeResponse.of(it) }
         return ResultResponse(
                 ResultCode.POTHOLE_SEARCH_SUCCESS,
-                getGeoJson(potholeList)
+                potholeList
         )
     }
 
