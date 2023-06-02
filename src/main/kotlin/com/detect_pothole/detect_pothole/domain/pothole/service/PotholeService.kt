@@ -117,7 +117,7 @@ class PotholeService(
         val geoJsonElementList = potholes.map {pothole ->
             GeoJsonElementDTO(
                 geometry = GeometryDTO("Point", listOf(pothole.point!!.x, pothole.point!!.y)),
-                properties = Properties(code = pothole.id.toString(), name = "pothole"+pothole.id)
+                properties = Properties(code = pothole.id.toString(), name = "pothole"+pothole.id, numberOfPothole = "X")
             )
         }
         return GeoJsonDTO(geoJsonElementList)

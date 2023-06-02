@@ -120,7 +120,7 @@ class GeotabService(
         var geojsonElementList = geotabs.map{geotab ->
             GeoJsonElementDTO(
                 geometry = GeometryDTO("Polygon", geotab.area!!.coordinates.toList().map { listOf(it.x, it.y) }),
-                properties = Properties(code = geotab.id.toString(), name = geotab.placename!!)
+                properties = Properties(code = geotab.id.toString(), name = geotab.placename!!, numberOfPothole = geotab.potholeList.size.toString())
             )
         }
         return GeoJsonDTO(geojsonElementList)
