@@ -48,9 +48,10 @@ class PotholeService(
             this.regDt = Timestamp(System.currentTimeMillis())
             this.modDt = Timestamp(System.currentTimeMillis())
         }
-        potholeRepository.save(pothole)
+        val result = potholeRepository.save(pothole)
         return ResultResponse(
-                ResultCode.POTHOLE_REGISTER_SUCCESS
+                ResultCode.POTHOLE_REGISTER_SUCCESS,
+                PotholeResponse.of(result)
         )
     }
 
