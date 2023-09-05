@@ -34,9 +34,7 @@ class PotholeService(
             zacc: Double,
             x: Double,
             y: Double,
-            image: MultipartFile
     ): ResultResponse {
-        val imageUrl = gcpStorageService.uploadImageToGCS(image)
 
         val pothole = Pothole().apply {
             this.geotabId = geotabRepository.findById(geotabId).orElseThrow{ GeotabNotFoundException() }
@@ -45,7 +43,7 @@ class PotholeService(
             this.zacc = BigDecimal.valueOf(zacc)
             this.point = ConvertUtill.getPoint(x, y)
 //            this.videoURL = videoUrl
-            this.imageURL = imageUrl
+            this.imageURL = "";
             this.state = "A"  // TODO: 추후 ML 서버에서 받아온 값으로 변경
             this.regDt = Timestamp(System.currentTimeMillis())
             this.modDt = Timestamp(System.currentTimeMillis())
@@ -53,6 +51,21 @@ class PotholeService(
         potholeRepository.save(pothole)
         return ResultResponse(
                 ResultCode.POTHOLE_REGISTER_SUCCESS
+        )
+    }
+
+    @Transactional
+    fun registerImage(
+            potholeId: Long,
+            image: MultipartFile
+    ): ResultResponse {
+        val imageUrl = gcpStorageService.uploadImageToGCS(image)
+
+        var pothole = potholeRepository.findById(potholeId).orElseThrow{ PotholeNotFoundException() }
+        pothole.imageURL = imageUrl
+        potholeRepository.save(pothole)
+        return ResultResponse(
+                ResultCode.POTHOLE_UPDATE_SUCCESS
         )
     }
 

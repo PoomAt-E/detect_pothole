@@ -14,8 +14,7 @@ class PotholeController(
 ) {
     @PostMapping("/register")
     fun register(
-            @RequestPart("data") potholeRegistrationRequest: PotholeRegistrationRequest,
-            @RequestPart("image") image: MultipartFile
+            @RequestBody potholeRegistrationRequest: PotholeRegistrationRequest,
     ): ResultResponse {
         return potholeService.register(
                 potholeRegistrationRequest.geotabId,
@@ -24,8 +23,15 @@ class PotholeController(
                 potholeRegistrationRequest.zacc,
                 potholeRegistrationRequest.x,
                 potholeRegistrationRequest.y,
-                image
         )
+    }
+
+    @PutMapping("/img/{id}")
+    fun setImage(
+            @PathVariable id: Long,
+            @RequestPart image: MultipartFile
+    ): ResultResponse {
+        return potholeService.registerImage(id, image)
     }
 
     @GetMapping("/search/id/{id}")
